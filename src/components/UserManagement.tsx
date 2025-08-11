@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,99 +28,22 @@ const UserManagement = () => {
   const [selectedUser, setSelectedUser] = useState<any>(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [users, setUsers] = useState<any[]>([]); // Cambia aquí
 
-  const users = [
-    {
-      id: 1,
-      name: "Ana García Ruiz",
-      email: "ana.garcia@email.com",
-      phone: "+34 612 345 678",
-      age: 28,
-      status: "active",
-      riskLevel: "low",
-      lastSession: "2024-08-10",
-      joinDate: "2024-07-15",
-      location: "Madrid, España",
-      diagnosis: "Ansiedad leve",
-      therapist: "Dr. Carlos Mendoza",
-      progress: 75,
-      sessions: 12,
-      avatar: "AG"
-    },
-    {
-      id: 2,
-      name: "Carlos López Martín",
-      email: "carlos.lopez@email.com",
-      phone: "+34 687 912 345",
-      age: 35,
-      status: "active",
-      riskLevel: "medium",
-      lastSession: "2024-08-09",
-      joinDate: "2024-06-20",
-      location: "Barcelona, España",
-      diagnosis: "Depresión moderada",
-      therapist: "Dra. María Fernández",
-      progress: 60,
-      sessions: 18,
-      avatar: "CL"
-    },
-    {
-      id: 3,
-      name: "María Rodríguez Silva",
-      email: "maria.rodriguez@email.com",
-      phone: "+34 698 765 432",
-      age: 42,
-      status: "inactive",
-      riskLevel: "high",
-      lastSession: "2024-08-05",
-      joinDate: "2024-05-10",
-      location: "Valencia, España",
-      diagnosis: "Trastorno bipolar",
-      therapist: "Dr. Antonio Ruiz",
-      progress: 40,
-      sessions: 25,
-      avatar: "MR"
-    },
-    {
-      id: 4,
-      name: "Juan Pérez González",
-      email: "juan.perez@email.com",
-      phone: "+34 634 567 890",
-      age: 31,
-      status: "active",
-      riskLevel: "low",
-      lastSession: "2024-08-11",
-      joinDate: "2024-08-01",
-      location: "Sevilla, España",
-      diagnosis: "Estrés laboral",
-      therapist: "Dra. Carmen López",
-      progress: 85,
-      sessions: 6,
-      avatar: "JP"
-    },
-    {
-      id: 5,
-      name: "Elena Martínez Torres",
-      email: "elena.martinez@email.com",
-      phone: "+34 667 234 567",
-      age: 26,
-      status: "pending",
-      riskLevel: "medium",
-      lastSession: null,
-      joinDate: "2024-08-11",
-      location: "Bilbao, España",
-      diagnosis: "Evaluación inicial",
-      therapist: "Pendiente asignación",
-      progress: 0,
-      sessions: 0,
-      avatar: "EM"
-    }
-  ];
+  // Nuevo: obtener usuarios desde la API
+  useEffect(() => {
+    fetch("http://localhost:3000/users")
+      .then(res => res.json())
+      .then(data => {
+        
+        console.log("Usuarios obtenidos:", data.data);
+        setUsers(data.data || [])})
+      .catch(() => setUsers([]));
+  }, []);
 
   const filteredUsers = users.filter(user =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.diagnosis.toLowerCase().includes(searchTerm.toLowerCase())
+    (user.name || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (user.email || "").toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const getStatusColor = (status: string) => {
@@ -150,78 +73,83 @@ const UserManagement = () => {
     }
   };
 
-  const UserForm = ({ user, onClose }: { user?: any; onClose: () => void }) => (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="name">Nombre completo</Label>
-          <Input id="name" defaultValue={user?.name} placeholder="Ingresa el nombre" />
+  // Nueva función para crear usuario
+  const createUser = async (userData: any) => {
+    try {
+      const res = await fetch("http://localhost:3000/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userData),
+      });
+      if (res.ok) {
+        // Recargar usuarios después de crear
+        const data = await res.json();
+        setUsers((prev) => [...prev, data]);
+        setIsCreateOpen(false);
+      }
+    } catch (error) {
+      alert("Error al crear usuario");
+    }
+  };
+
+  // Modifica el UserForm para manejar el submit
+  const UserForm = ({ user, onClose }: { user?: any; onClose: () => void }) => {
+    const [form, setForm] = useState({
+      email: user?.email || "",
+      role: user?.role || "paciente",
+      name: user?.name || "",
+      age: user?.age ?? "",
+      gender: user?.gender || "",
+      password: "123456",
+    });
+    console.log(form);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { id, value } = e.target;
+      setForm({
+        ...form,
+        [id]: id === "age" ? Number(value) : value, // Asegura que age sea número
+      });
+    };
+
+    const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+      createUser(form);
+    };
+
+    return (
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="name">Nombre completo</Label>
+            <Input id="name" value={form.name} onChange={handleChange} placeholder="Ingresa el nombre" />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="age">Edad</Label>
+            <Input id="age" type="number" value={form.age} onChange={handleChange} placeholder="Edad" />
+          </div>
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="age">Edad</Label>
-          <Input id="age" type="number" defaultValue={user?.age} placeholder="Edad" />
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input id="email" type="email" value={form.email} onChange={handleChange} placeholder="email@ejemplo.com" />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="gender">Género</Label>
+            <Input id="gender" value={form.gender} onChange={handleChange} placeholder="Género" />
+          </div>
         </div>
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" defaultValue={user?.email} placeholder="email@ejemplo.com" />
+        <div className="flex justify-end gap-2 pt-4">
+          <Button variant="outline" type="button" onClick={onClose}>
+            Cancelar
+          </Button>
+          <Button type="submit" className="bg-gradient-serenity text-white">
+            {user ? 'Actualizar' : 'Crear'} Usuario
+          </Button>
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="phone">Teléfono</Label>
-          <Input id="phone" defaultValue={user?.phone} placeholder="+34 600 000 000" />
-        </div>
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="location">Ubicación</Label>
-        <Input id="location" defaultValue={user?.location} placeholder="Ciudad, País" />
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="status">Estado</Label>
-          <Select defaultValue={user?.status || "pending"}>
-            <SelectTrigger>
-              <SelectValue placeholder="Seleccionar estado" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="active">Activo</SelectItem>
-              <SelectItem value="inactive">Inactivo</SelectItem>
-              <SelectItem value="pending">Pendiente</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="risk">Nivel de riesgo</Label>
-          <Select defaultValue={user?.riskLevel || "low"}>
-            <SelectTrigger>
-              <SelectValue placeholder="Seleccionar riesgo" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="low">Bajo</SelectItem>
-              <SelectItem value="medium">Medio</SelectItem>
-              <SelectItem value="high">Alto</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="diagnosis">Diagnóstico</Label>
-        <Textarea id="diagnosis" defaultValue={user?.diagnosis} placeholder="Descripción del diagnóstico..." />
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="therapist">Terapeuta asignado</Label>
-        <Input id="therapist" defaultValue={user?.therapist} placeholder="Nombre del terapeuta" />
-      </div>
-      <div className="flex justify-end gap-2 pt-4">
-        <Button variant="outline" onClick={onClose}>
-          Cancelar
-        </Button>
-        <Button onClick={onClose} className="bg-gradient-serenity text-white">
-          {user ? 'Actualizar' : 'Crear'} Usuario
-        </Button>
-      </div>
-    </div>
-  );
+      </form>
+    );
+  };
 
   return (
     <div className="space-y-6">
