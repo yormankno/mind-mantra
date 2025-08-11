@@ -2,95 +2,151 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Mental Health App Design System - Pastel Colors for Serenity & Wellness */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Base colors - soft cream background for warmth */
+    --background: 45 15% 97%;
+    --foreground: 220 20% 20%;
 
+    /* Card system - subtle elevation with soft shadows */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 220 20% 20%;
 
+    /* Popover system */
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 220 20% 20%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - Calming blue for trust and serenity */
+    --primary: 200 50% 70%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 200 60% 85%;
+    --primary-glow: 200 60% 80%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Soft mint green for healing and growth */
+    --secondary: 150 40% 80%;
+    --secondary-foreground: 150 30% 25%;
+    --secondary-light: 150 50% 90%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Therapeutic colors */
+    --therapeutic: 280 35% 80%; /* Soft lavender for relaxation */
+    --therapeutic-foreground: 280 40% 25%;
+    --therapeutic-light: 280 45% 90%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Care colors - Gentle pink for compassion */
+    --care: 340 50% 80%;
+    --care-foreground: 340 40% 25%;
+    --care-light: 340 60% 92%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Wellness - Warm yellow for optimism */
+    --wellness: 50 60% 85%;
+    --wellness-foreground: 50 40% 25%;
+    --wellness-light: 50 70% 92%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Muted tones */
+    --muted: 220 15% 92%;
+    --muted-foreground: 220 20% 45%;
 
-    --radius: 0.5rem;
+    /* Accent for highlights */
+    --accent: 200 45% 88%;
+    --accent-foreground: 200 30% 25%;
 
-    --sidebar-background: 0 0% 98%;
+    /* Gentle destructive - soft coral instead of harsh red */
+    --destructive: 10 50% 75%;
+    --destructive-foreground: 0 0% 100%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    /* Borders and inputs - very subtle */
+    --border: 220 15% 88%;
+    --input: 220 15% 92%;
+    --ring: 200 50% 70%;
 
-    --sidebar-primary: 240 5.9% 10%;
+    /* Soft, rounded design for approachability */
+    --radius: 1rem;
 
+    /* Gradients for depth and visual interest */
+    --gradient-serenity: linear-gradient(135deg, hsl(var(--primary-light)), hsl(var(--therapeutic-light)));
+    --gradient-wellness: linear-gradient(135deg, hsl(var(--secondary-light)), hsl(var(--wellness-light)));
+    --gradient-care: linear-gradient(135deg, hsl(var(--care-light)), hsl(var(--primary-light)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--therapeutic)) 50%, hsl(var(--secondary)) 100%);
+
+    /* Shadows for gentle elevation */
+    --shadow-soft: 0 4px 20px -8px hsl(var(--primary) / 0.15);
+    --shadow-card: 0 8px 30px -12px hsl(var(--primary) / 0.2);
+    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.3);
+
+    /* Smooth transitions */
+    --transition-gentle: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* Sidebar with wellness theme */
+    --sidebar-background: 150 30% 96%;
+    --sidebar-foreground: 150 25% 30%;
+    --sidebar-primary: 150 40% 40%;
     --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 150 20% 90%;
+    --sidebar-accent-foreground: 150 30% 25%;
+    --sidebar-border: 150 20% 85%;
+    --sidebar-ring: 150 40% 60%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Dark mode with soft, warm tones */
+    --background: 220 25% 8%;
+    --foreground: 220 15% 92%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 220 20% 12%;
+    --card-foreground: 220 15% 92%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 220 20% 12%;
+    --popover-foreground: 220 15% 92%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 200 50% 60%;
+    --primary-foreground: 220 20% 12%;
+    --primary-light: 200 40% 40%;
+    --primary-glow: 200 45% 50%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 150 30% 60%;
+    --secondary-foreground: 220 20% 12%;
+    --secondary-light: 150 25% 35%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --therapeutic: 280 30% 60%;
+    --therapeutic-foreground: 220 20% 12%;
+    --therapeutic-light: 280 25% 35%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --care: 340 40% 65%;
+    --care-foreground: 220 20% 12%;
+    --care-light: 340 30% 40%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --wellness: 50 45% 70%;
+    --wellness-foreground: 220 20% 12%;
+    --wellness-light: 50 35% 45%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --muted: 220 15% 18%;
+    --muted-foreground: 220 15% 65%;
+
+    --accent: 200 30% 25%;
+    --accent-foreground: 220 15% 92%;
+
+    --destructive: 10 40% 65%;
+    --destructive-foreground: 220 20% 12%;
+
+    --border: 220 15% 20%;
+    --input: 220 15% 18%;
+    --ring: 200 50% 60%;
+
+    --gradient-serenity: linear-gradient(135deg, hsl(var(--primary-light)), hsl(var(--therapeutic-light)));
+    --gradient-wellness: linear-gradient(135deg, hsl(var(--secondary-light)), hsl(var(--wellness-light)));
+    --gradient-care: linear-gradient(135deg, hsl(var(--care-light)), hsl(var(--primary-light)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--therapeutic)) 50%, hsl(var(--secondary)) 100%);
+
+    --sidebar-background: 150 20% 15%;
+    --sidebar-foreground: 150 15% 85%;
+    --sidebar-primary: 150 30% 50%;
+    --sidebar-primary-foreground: 150 20% 15%;
+    --sidebar-accent: 150 15% 22%;
+    --sidebar-accent-foreground: 150 15% 85%;
+    --sidebar-border: 150 15% 20%;
+    --sidebar-ring: 150 30% 50%;
   }
 }
 
@@ -100,6 +156,79 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+    transition: var(--transition-gentle);
+  }
+
+  /* Custom scrollbar for better UX */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-primary/30 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary/50;
+  }
+}
+
+@layer components {
+  /* Mental health themed utility classes */
+  .gradient-serenity {
+    background: var(--gradient-serenity);
+  }
+  
+  .gradient-wellness {
+    background: var(--gradient-wellness);
+  }
+  
+  .gradient-care {
+    background: var(--gradient-care);
+  }
+  
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+  
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+  
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .transition-gentle {
+    transition: var(--transition-gentle);
+  }
+
+  /* Breathing animation for wellness elements */
+  .animate-breathe {
+    animation: breathe 4s ease-in-out infinite;
+  }
+  
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  
+  /* Gentle pulse for notifications */
+  .animate-gentle-pulse {
+    animation: gentle-pulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes gentle-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
   }
 }
