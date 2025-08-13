@@ -74,7 +74,7 @@ const Layout = ({ children, currentSection, onSectionChange }: LayoutProps) => {
               </div>
               {sidebarOpen && (
                 <div>
-                  <h1 className="text-lg font-semibold text-sidebar-foreground">MentalCare</h1>
+                  <h1 className="text-lg font-semibold text-sidebar-foreground">MenteSana</h1>
                   <p className="text-sm text-sidebar-foreground/60">Plataforma de Bienestar</p>
                 </div>
               )}

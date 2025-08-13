@@ -1,18 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
-import { 
-  Plus, 
+import {
+  Plus,
   Search,
-  ClipboardList, 
-  Edit, 
+  ClipboardList,
+  Edit,
   Trash2,
   Eye,
   BarChart3,
@@ -25,7 +26,9 @@ import {
   FileText,
   Brain,
   Heart,
-  Activity
+  Activity,
+  HelpCircle
+
 } from "lucide-react";
 
 const Evaluations = () => {
@@ -34,126 +37,25 @@ const Evaluations = () => {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [evaluations, setEvaluations] = useState<any[]>([]);
 
-  const evaluations = [
-    {
-      id: 1,
-      title: "Escala de Ansiedad GAD-7",
-      description: "Evaluación estandardizada para medir niveles de ansiedad generalizada",
-      type: "anxiety",
-      questions: 7,
-      avgCompletionTime: "5 min",
-      totalCompletions: 127,
-      avgScore: 6.8,
-      status: "active",
-      created: "2024-07-15",
-      lastCompleted: "2024-08-11",
-      category: "Trastornos de Ansiedad",
-      severity: "medium",
-      completionRate: 89,
-      results: [
-        { userId: 1, userName: "Ana García", score: 8, severity: "medium", date: "2024-08-11" },
-        { userId: 2, userName: "Carlos López", score: 12, severity: "high", date: "2024-08-10" },
-        { userId: 4, userName: "Juan Pérez", score: 4, severity: "low", date: "2024-08-09" }
-      ]
-    },
-    {
-      id: 2,
-      title: "Inventario de Depresión PHQ-9",
-      description: "Herramienta de screening para detectar síntomas depresivos",
-      type: "depression",
-      questions: 9,
-      avgCompletionTime: "7 min",
-      totalCompletions: 98,
-      avgScore: 9.2,
-      status: "active",
-      created: "2024-07-20",
-      lastCompleted: "2024-08-11",
-      category: "Trastornos del Estado de Ánimo",
-      severity: "medium",
-      completionRate: 92,
-      results: [
-        { userId: 2, userName: "Carlos López", score: 14, severity: "high", date: "2024-08-11" },
-        { userId: 3, userName: "María Rodríguez", score: 16, severity: "high", date: "2024-08-10" },
-        { userId: 1, userName: "Ana García", score: 6, severity: "low", date: "2024-08-09" }
-      ]
-    },
-    {
-      id: 3,
-      title: "Escala de Estrés Percibido PSS-10",
-      description: "Medición del nivel de estrés percibido en el último mes",
-      type: "stress",
-      questions: 10,
-      avgCompletionTime: "6 min",
-      totalCompletions: 156,
-      avgScore: 18.5,
-      status: "active",
-      created: "2024-06-10",
-      lastCompleted: "2024-08-11",
-      category: "Estrés y Adaptación",
-      severity: "high",
-      completionRate: 95,
-      results: [
-        { userId: 4, userName: "Juan Pérez", score: 22, severity: "high", date: "2024-08-11" },
-        { userId: 1, userName: "Ana García", score: 15, severity: "medium", date: "2024-08-10" },
-        { userId: 5, userName: "Elena Martínez", score: 19, severity: "high", date: "2024-08-09" }
-      ]
-    },
-    {
-      id: 4,
-      title: "Evaluación de Bienestar WHO-5",
-      description: "Índice de bienestar general y calidad de vida",
-      type: "wellbeing",
-      questions: 5,
-      avgCompletionTime: "3 min",
-      totalCompletions: 89,
-      avgScore: 14.2,
-      status: "draft",
-      created: "2024-08-05",
-      lastCompleted: "2024-08-08",
-      category: "Bienestar General",
-      severity: "low",
-      completionRate: 78,
-      results: [
-        { userId: 4, userName: "Juan Pérez", score: 18, severity: "low", date: "2024-08-08" },
-        { userId: 1, userName: "Ana García", score: 16, severity: "low", date: "2024-08-07" },
-        { userId: 2, userName: "Carlos López", score: 10, severity: "medium", date: "2024-08-06" }
-      ]
-    },
-    {
-      id: 5,
-      title: "Cuestionario de Trauma PCL-5",
-      description: "Screening para síntomas de estrés postraumático",
-      type: "trauma",
-      questions: 20,
-      avgCompletionTime: "12 min",
-      totalCompletions: 34,
-      avgScore: 28.7,
-      status: "paused",
-      created: "2024-05-20",
-      lastCompleted: "2024-08-05",
-      category: "Trauma y Estrés",
-      severity: "high",
-      completionRate: 67,
-      results: [
-        { userId: 3, userName: "María Rodríguez", score: 42, severity: "high", date: "2024-08-05" },
-        { userId: 2, userName: "Carlos López", score: 35, severity: "high", date: "2024-08-03" }
-      ]
-    }
-  ];
+  useEffect(() => {
+    fetch("http://localhost:3000/evaluations/base/all")
+      .then(res => res.json())
+      .then(data => {
+        console.log("PREGUNTAS: ", data);
+        setEvaluations(data || [])
+      })
+      .catch(() => setEvaluations([]));
+  }, []);
 
-  const filteredEvaluations = evaluations.filter(evaluation =>
-    evaluation.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    evaluation.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    evaluation.type.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'anxiety': return Brain;
-      case 'depression': return Heart;
-      case 'stress': return Activity;
-      case 'wellbeing': return CheckCircle;
+      case 'ANSIEDAD': return Brain;
+      case 'DEPRESION': return Heart;
+      case 'BIENESTAR': return Activity;
+      case 'APOYO_SOCIAL': return CheckCircle;
       case 'trauma': return AlertTriangle;
       default: return ClipboardList;
     }
@@ -161,10 +63,10 @@ const Evaluations = () => {
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'anxiety': return 'therapeutic';
-      case 'depression': return 'care';
-      case 'stress': return 'wellness';
-      case 'wellbeing': return 'secondary';
+      case 'ANSIEDAD': return 'care';
+      case 'DEPRESION': return 'wellness';
+      case 'BIENESTAR': return 'care';
+      case 'APOYO_SOCIAL': return 'wellness';
       case 'trauma': return 'destructive';
       default: return 'primary';
     }
@@ -172,9 +74,10 @@ const Evaluations = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'secondary';
-      case 'draft': return 'wellness';
-      case 'paused': return 'destructive';
+      case '0-25': return 'secondary';
+      case '26-50': return 'wellness';
+      case '51-75': return 'destructive';
+      case '76-100': return 'care';
       default: return 'muted';
     }
   };
@@ -194,12 +97,12 @@ const Evaluations = () => {
         <Label htmlFor="title">Título de la evaluación</Label>
         <Input id="title" defaultValue={evaluation?.title} placeholder="Ingresa el título" />
       </div>
-      
+
       <div className="space-y-2">
         <Label htmlFor="description">Descripción</Label>
-        <Textarea 
-          id="description" 
-          defaultValue={evaluation?.description} 
+        <Textarea
+          id="description"
+          defaultValue={evaluation?.description}
           placeholder="Describe el propósito y alcance de la evaluación..."
           rows={3}
         />
@@ -298,6 +201,146 @@ const Evaluations = () => {
       </div>
     </div>
   );
+
+  const EvaluationEditForm = ({ evaluation, onClose, onSave }: { evaluation: any; onClose: () => void; onSave: (data: any) => void }) => {
+    const [form, setForm] = useState({
+      codeEval: evaluation?.codeEval || "",
+      nameEval: evaluation?.nameEval || "",
+      scoreMax: evaluation?.scoreMax || 0,
+      form: evaluation?.form || "",
+      interpretation: evaluation?.interpretation || [],
+      questions: evaluation?.questions || [],
+    });
+
+    const [answersArray, setAnswersArray] = useState<any[]>([]);
+
+    // Manejo de cambios para campos simples
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { id, value } = e.target;
+      setForm({ ...form, [id]: id === "scoreMax" ? Number(value) : value });
+    };
+
+    // Manejo de cambios para interpretación
+    const handleInterpretationChange = (idx: number, field: string, value: string) => {
+      const updated = [...form.interpretation];
+      updated[idx][field] = value;
+      setForm({ ...form, interpretation: updated });
+    };
+
+    // Manejo de cambios para preguntas
+    const handleQuestionChange = (
+      idx: number,
+      field: string,
+      value: string | number,
+      event: any
+    ) => {
+      event.preventDefault();
+      const updated = [...form.questions];
+      updated[idx][field] = value;
+      setForm({ ...form, questions: updated });
+
+      // Actualiza answersArray con la respuesta seleccionada
+      const newAnswers = updated.map(q => ({
+        question: q.text,
+        answer: q.answer ?? ""
+      }));
+      setAnswersArray(newAnswers);
+    };
+
+    console.log("FORM RESPUESTAS: ", answersArray);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+
+      // Construir el objeto con la estructura requerida
+      const payload = {
+        userId: 2, // Puedes cambiar esto según el usuario actual
+        type: form.codeEval || "PHQ-9",
+        questions: form.questions.map((q: any) => ({
+          question: q.text,
+          answer: q.answer ?? ""
+        }))
+      };
+
+      try {
+        const res = await fetch("http://localhost:3000/evaluations", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (res.ok) {
+          // Opcional: manejar respuesta o cerrar modal
+          onSave(payload);
+        } else {
+          alert("Error al guardar la evaluación");
+        }
+      } catch (error) {
+        alert("Error de conexión");
+      }
+    };
+
+    const ratings = [
+      { emoji: "😵", value: 1, label: "Very dissatisfied" },
+      { emoji: "😞", value: 2, label: "Dissatisfied" },
+      { emoji: "😐", value: 3, label: "Neutral" },
+      { emoji: "😊", value: 4, label: "Satisfied" },
+      { emoji: "😍", value: 5, label: "Very satisfied" },
+    ]
+
+    return (
+      <form className="space-y-4" onSubmit={handleSubmit}>
+
+        <div className="space-y-2">
+          <Label htmlFor="nameEval">Nombre de la Evaluación: {form.nameEval}</Label>
+        </div>
+        <div>
+          <Label className="space-y-2" >Preguntas</Label>
+          <div className="space-y-2">
+            {form.questions.map((q: any, idx: number) => (
+              <div key={q.id} className="flex flex-col gap-2">
+                <Label htmlFor="nameEval">{q.numberQuestion}. {q.text}</Label>
+              
+                {/* <Input
+                  id={`question-${idx}`}
+                  value={q.text}
+                  onChange={(e) => handleQuestionChange(idx, "text", e.target.value)}
+                  placeholder="Pregunta..." /> */}
+
+                <div className="flex gap-6 mt-3 mb-3">
+                  {ratings.map((rating) => (
+                    <button
+                      key={rating.value}
+                      className={`
+          w-10 h-10 rounded-full flex items-center justify-center text-3xl
+          transition-all duration-200 hover:scale-105
+          bg-orange-200 ring-2 ring-orange-300 bg-orange-100 hover:bg-orange-150
+          ${form.questions[idx]?.answer === rating.value ? "ring-4 ring-orange-500" : ""}
+        `}
+                      aria-label={rating.label}
+                      onClick={e => handleQuestionChange(idx, "answer", rating.value, e)}
+                      type="button"
+                    >
+                      {rating.emoji}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+
+        </div>
+        <div className="flex justify-end gap-2 pt-4">
+          <Button variant="outline" type="button" onClick={onClose}>
+            Cancelar
+          </Button>
+          <Button type="submit" className="bg-gradient-serenity text-white">
+            Guardar Cambios
+          </Button>
+        </div>
+      </form>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -404,33 +447,33 @@ const Evaluations = () => {
 
       {/* Evaluations Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {filteredEvaluations.map((evaluation) => {
-          const TypeIcon = getTypeIcon(evaluation.type);
+        {evaluations.map((evaluation) => {
+          const TypeIcon = getTypeIcon(evaluation.codeEval);
           return (
             <Card key={evaluation.id} className="shadow-card hover:shadow-glow transition-gentle">
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-start gap-4">
-                    <div className={`p-3 rounded-xl bg-gradient-${getTypeColor(evaluation.type)} shadow-soft`}>
+                    <div className={`p-3 rounded-xl bg-gradient-${getTypeColor(evaluation.codeEval)} shadow-soft`}>
                       <TypeIcon className="h-6 w-6 text-white" />
                     </div>
                     <div className="flex-1">
                       <h3 className="font-semibold text-lg text-foreground mb-1">
-                        {evaluation.title}
+                        {evaluation.nameEval}
                       </h3>
                       <p className="text-sm text-muted-foreground mb-2">
-                        {evaluation.description}
+                        {evaluation.codeEval}
                       </p>
                       <Badge variant="outline" className="text-xs">
-                        {evaluation.category}
+                        {evaluation.form}
                       </Badge>
                     </div>
                   </div>
-                  <div className="flex gap-1">
-                    <Dialog open={isViewOpen} onOpenChange={setIsViewOpen}>
+                  <div className="">
+                    <Dialog open={isViewOpen} onOpenChange={setIsViewOpen} >
                       <DialogTrigger asChild>
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant="ghost"
                           onClick={() => setSelectedEvaluation(evaluation)}
                         >
@@ -449,22 +492,38 @@ const Evaluations = () => {
                     </Dialog>
                     <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
                       <DialogTrigger asChild>
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant="ghost"
                           onClick={() => setSelectedEvaluation(evaluation)}
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="max-w-2xl">
-                        <DialogHeader>
-                          <DialogTitle className="flex items-center gap-2">
-                            <Edit className="h-5 w-5 text-therapeutic" />
-                            Editar Evaluación
-                          </DialogTitle>
-                        </DialogHeader>
-                        <EvaluationForm evaluation={selectedEvaluation} onClose={() => setIsEditOpen(false)} />
+                      <DialogContent className="max-w-2xl h-screen p-0 overflow-hidden">
+                        <div className="flex flex-col h-full">
+                          <DialogHeader>
+                            <DialogTitle className="flex items-center gap-2">
+                              <Edit className="h-5 w-5 text-therapeutic" />
+                              Realizar Evaluación
+                            </DialogTitle>
+                          </DialogHeader>
+                          <div className="flex-1 overflow-y-auto p-4">
+                            
+                            {selectedEvaluation && (
+                              <EvaluationEditForm
+                                evaluation={selectedEvaluation}
+                                onClose={() => setIsEditOpen(false)}
+                                onSave={(data) => {
+                                  // Aquí puedes hacer el fetch PUT/PATCH a tu API
+                                  setIsEditOpen(false);
+                                }}
+                              />
+                            )}
+                          </div>
+
+                        </div>
+
                       </DialogContent>
                     </Dialog>
                     <Button size="sm" variant="ghost" className="text-destructive hover:text-destructive">
@@ -475,10 +534,10 @@ const Evaluations = () => {
 
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <Badge variant={getStatusColor(evaluation.status)}>
+                    <Badge variant={getStatusColor(evaluation.codeEval)}>
                       {evaluation.status === 'active' && 'Activa'}
                       {evaluation.status === 'draft' && 'Borrador'}
-                      {evaluation.status === 'paused' && 'Pausada'}
+                      {evaluation.codeEval === 'APOYO_SOCIAL' && 'Apoyo'}
                     </Badge>
                     <Badge variant={getSeverityColor(evaluation.severity)}>
                       Severidad {evaluation.severity === 'low' ? 'Baja' : evaluation.severity === 'medium' ? 'Media' : 'Alta'}
@@ -487,33 +546,35 @@ const Evaluations = () => {
 
                   <div className="grid grid-cols-3 gap-4 text-sm">
                     <div className="text-center">
-                      <p className="text-lg font-bold text-therapeutic">{evaluation.questions}</p>
+                      <p className="text-lg font-bold text-therapeutic">{evaluation.questions.length}</p>
                       <p className="text-muted-foreground">Preguntas</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-lg font-bold text-care">{evaluation.totalCompletions}</p>
+                      <p className="text-lg font-bold text-care">{evaluation.codeEval}</p>
                       <p className="text-muted-foreground">Completadas</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-lg font-bold text-wellness">{evaluation.avgScore}</p>
-                      <p className="text-muted-foreground">Puntuación</p>
+                      <p className="text-lg font-bold text-wellness">{evaluation.scoreMax}</p>
+                      <p className="text-muted-foreground">Max Puntuación</p>
                     </div>
                   </div>
 
-                  <div className="space-y-2">
+                  {/* <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Tasa de finalización</span>
-                      <span className="font-medium">{evaluation.completionRate}%</span>
+                      <span className="font-medium">{evaluation.codeEval}%</span>
                     </div>
                     <Progress value={evaluation.completionRate} className="h-2" />
-                  </div>
+                  </div> */}
 
                   <div className="flex items-center justify-between text-sm text-muted-foreground pt-2 border-t border-border">
-                    <span className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      {evaluation.avgCompletionTime}
-                    </span>
-                    <span>Última: {evaluation.lastCompleted}</span>
+                    {evaluation.interpretation.map((interp: any, idx: number) => (
+                      <li key={idx}>
+                        <br />
+                        <Badge variant={getStatusColor(interp.rango)} className="mr-2">{interp.nivel}</Badge>
+                        <span>Rango: {interp.rango}</span>
+                      </li>
+                    ))}
                   </div>
                 </div>
               </CardContent>
@@ -522,7 +583,7 @@ const Evaluations = () => {
         })}
       </div>
 
-      {filteredEvaluations.length === 0 && (
+      {/* {filteredEvaluations.length === 0 && (
         <Card className="shadow-card">
           <CardContent className="p-12 text-center">
             <ClipboardList className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
@@ -534,7 +595,42 @@ const Evaluations = () => {
             </p>
           </CardContent>
         </Card>
-      )}
+      )} */}
+
+      {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {evaluations.map((evalItem) => {
+          const TypeIcon = getTypeIcon(evalItem.codeEval);
+          return <Card key={evalItem.id} className="shadow-card">
+            <CardContent className="p-6">
+              <div className="flex items-start gap-4">
+                <div className={`p-3 rounded-xl bg-gradient-${getTypeColor(evalItem.codeEval)} shadow-soft`}>
+                  <TypeIcon className="h-6 w-6 text-white" />
+                </div>
+                <h2 className="font-semibold text-lg mb-1">{evalItem.nameEval}</h2>
+                <p className="text-muted-foreground mb-2">Código: {evalItem.codeEval}</p>
+                <p className="mb-2"><span className="font-medium">Puntaje Máximo:</span> {evalItem.scoreMax}</p>
+                <p className="mb-2"><span className="font-medium">Fórmula:</span> {evalItem.form}</p>
+                <div className="mt-4">
+                  <h4 className="font-semibold mb-2">Interpretación:</h4>
+                  <ul className="list-disc ml-6 space-y-1">
+                    {evalItem.interpretation.map((interp: any, idx: number) => (
+                      <li key={idx}>
+                        {/* <Badge variant={getStatusColor(evaluation.status)}>
+                      {evaluation.status === 'active' && 'Activa'}
+                      {evaluation.status === 'draft' && 'Borrador'}
+                      {evaluation.status === 'paused' && 'Pausada'}
+                    </Badge> */}
+      {/* <Badge variant="outline" className="mr-2">{interp.nivel}</Badge>
+                        <span>Rango: {interp.rango}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        })}
+      </div>  */}
     </div>
   );
 };
