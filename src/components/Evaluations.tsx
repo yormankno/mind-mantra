@@ -254,7 +254,7 @@ const Evaluations = () => {
 
       // Construir el objeto con la estructura requerida
       const payload = {
-        userId: 2, // Puedes cambiar esto según el usuario actual
+        userId: 2,
         type: form.codeEval || "PHQ-9",
         questions: form.questions.map((q: any) => ({
           question: q.text,
@@ -269,7 +269,197 @@ const Evaluations = () => {
           body: JSON.stringify(payload),
         });
         if (res.ok) {
-          // Opcional: manejar respuesta o cerrar modal
+          const evalResult = await res.json();
+
+          const fechaEvaluacion = evalResult.createdAt
+            ? new Date(evalResult.createdAt).toISOString().slice(0, 10)
+            : "";
+
+          // Enviar correo después de crear la evaluación
+          await fetch("http://localhost:3000/mail/send", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              to: "yormankno@gmail.com",
+              subject: "Resultado de Mente sana",
+              html: `<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resultado de Evaluación - Apoyo Social</title>
+  <style>
+    /* Estilos básicos compatibles con la mayoría de clientes */
+    body { margin:0; padding:0; background-color:#f6f7fb; }
+    table { border-spacing:0; }
+    img { border:0; display:block; }
+    a { color:#2563eb; text-decoration:none; }
+
+    /* Tipografías de respaldo */
+    .font { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, 'Helvetica Neue', Helvetica, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif; }
+
+    /* Badges */
+    .badge { display:inline-block; padding:4px 10px; border-radius:999px; font-size:12px; font-weight:600; }
+    .badge-info { background:#e0f2fe; color:#0369a1; }
+    .badge-score { background:#ecfdf5; color:#065f46; }
+
+    /* Cards */
+    .card { background:#ffffff; border-radius:12px; box-shadow:0 1px 2px rgba(0,0,0,0.06); }
+
+    /* Small helpers for spacing */
+    .px { padding-left:24px; padding-right:24px; }
+    .py { padding-top:24px; padding-bottom:24px; }
+    .mt-16 { margin-top:16px; }
+
+    /* Responsive table fallback */
+    @media only screen and (max-width:600px){
+      .container { width:100% !important; }
+      .px { padding-left:16px !important; padding-right:16px !important; }
+    }
+  </style>
+</head>
+<body class="font" style="margin:0; padding:0; background-color:#f6f7fb;">
+  <center style="width:100%; background:#f6f7fb;">
+    <table role="presentation" width="100%" style="max-width:640px; margin:0 auto;" class="container">
+      <tr>
+        <td class="px py">
+
+          <!-- Header -->
+          <table role="presentation" width="100%" class="card" style="background:#0f172a; color:#ffffff; border-radius:14px;">
+            <tr>
+              <td style="padding:20px 24px;">
+                <table role="presentation" width="100%">
+                  <tr>
+                    <td align="left" style="font-weight:700; font-size:18px;">MenteSana</td>
+                    <td align="right" style="font-size:12px; opacity:.9;">Notificación de evaluación</td>
+                  </tr>
+                </table>
+                <h1 style="margin:10px 0 0; font-size:20px; line-height:1.4; color:#ffffff;">Resultado de Evaluación: <span style="color:#93c5fd;">${evalResult.type}</span></h1>
+                <div style="margin-top:8px; font-size:12px; color:#cbd5e1;">Generado el <strong>13 de agosto de 2025, 8:39 p. m.</strong> (hora de Colombia)</div>
+              </td>
+            </tr>
+          </table>
+
+          <!-- Resumen -->
+          <table role="presentation" width="100%" class="card mt-16" style="border-radius:12px;">
+            <tr>
+              <td style="padding:20px 24px;">
+                <table role="presentation" width="100%">
+                  <tr>
+                    <td style="padding-bottom:10px; font-weight:700; font-size:16px; color:#0f172a;">Resumen</td>
+                  </tr>
+                </table>
+
+                <table role="presentation" width="100%" style="font-size:14px; color:#334155;">
+                  <tr>
+                    <td style="padding:8px 0; color:#64748b;">Usuario</td>
+                    <td style="padding:8px 0;">yorman programador &lt;<a href="mailto:${evalResult.user.email}">yormankno@gmail.com</a>&gt;</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:8px 0; color:#64748b;">Tipo</td>
+                    <td style="padding:8px 0;">
+                      <span class="badge badge-info">${evalResult.type}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:8px 0; color:#64748b;">Puntaje</td>
+                    <td style="padding:8px 0;">
+                      <span class="badge badge-score">${evalResult.score}</span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:8px 0; color:#64748b;">Resultado</td>
+                    <td style="padding:8px 0;"> Según la evaluación, obtuve un resultado de ${evalResult.score}, lo que indica una tendencia ${evalResult.result} a la ${evalResult.type}.  </td>
+                  </tr>
+                  <tr>
+                    <td style="padding:8px 0; color:#64748b;">Creado (UTC)</td>
+                    <td style="padding:8px 0;">${fechaEvaluacion}</td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+
+          <!-- Detalle de preguntas -->
+          <table role="presentation" width="100%" class="card mt-16" style="border-radius:12px;">
+            <tr>
+              <td style="padding:20px 24px;">
+                <table role="presentation" width="100%">
+                  <tr>
+                    <td style="padding-bottom:10px; font-weight:700; font-size:16px; color:#0f172a;">Detalle de preguntas</td>
+                  </tr>
+                </table>
+
+                <table role="presentation" width="100%" style="border-collapse:collapse; font-size:14px; color:#0f172a;">
+                  <thead>
+                    <tr>
+                      <th align="left" style="padding:12px 10px; border-bottom:1px solid #e2e8f0; color:#64748b; font-weight:600;">#</th>
+                      <th align="left" style="padding:12px 10px; border-bottom:1px solid #e2e8f0; color:#64748b; font-weight:600;">Pregunta</th>
+                      <th align="left" style="padding:12px 10px; border-bottom:1px solid #e2e8f0; color:#64748b; font-weight:600;">Respuesta</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+${evalResult.questions.map((q: any, idx: number) => (
+                `<tr>
+                      <td style="padding:10px; border-bottom:1px solid #f1f5f9;">${idx + 1}</td>
+                      <td style="padding:10px; border-bottom:1px solid #f1f5f9;">${q.question}</td>
+                      <td style="padding:10px; border-bottom:1px solid #f1f5f9;">${q.answer}</td>
+                    </tr>`
+              ))
+                }
+                  </tbody>
+                </table>
+
+                <!-- Nota -->
+                <p style="margin:16px 0 0; font-size:12px; color:#64748b;">Escala asumida 1–5 (mayor = más acuerdo). Ajusta el texto si tu escala es diferente.</p>
+              </td>
+            </tr>
+          </table>
+
+          <!-- CTA / Footer -->
+          <table role="presentation" width="100%" class="mt-16">
+            <tr>
+              <td align="center" style="padding:8px 0 16px;">
+                <a href="#" style="display:inline-block; background:#2563eb; color:#ffffff; padding:12px 18px; border-radius:10px; font-weight:600;">Ver en plataforma</a>
+              </td>
+            </tr>
+            <tr>
+              <td align="center" style="font-size:12px; color:#94a3b8; padding-bottom:40px;">
+                © 2025 MenteSana • Este email fue enviado automáticamente, por favor no responder a este mensaje.
+              </td>
+            </tr>
+          </table>
+
+          <!-- Comentarios para integración (no visibles por la mayoría de clientes) -->
+          <!--
+            Para usarlo como plantilla dinámica (ej. NestJS + @nestjs-modules/mailer):
+
+            const html = renderTemplate({
+              id: data.id,
+              userName: data.user.name,
+              userEmail: data.user.email,
+              type: data.type,
+              score: data.score,
+              result: data.result,
+              createdUtc: new Date(data.createdAt).toISOString().slice(0,19).replace('T',' '),
+              createdLocal: new Date(data.createdAt).toLocaleString('es-CO', { timeZone:'America/Bogota', dateStyle:'long', timeStyle:'short' }),
+              questions: data.questions
+            })
+
+            Luego reemplaza los valores dentro del HTML (busca por los literales actuales) o usa un motor de plantillas (Handlebars/EJS) con placeholders como {{userName}}.
+          -->
+
+        </td>
+      </tr>
+    </table>
+  </center>
+</body>
+</html>
+`
+            }),
+          });
+
           onSave(payload);
         } else {
           alert("Error al guardar la evaluación");
@@ -299,7 +489,7 @@ const Evaluations = () => {
             {form.questions.map((q: any, idx: number) => (
               <div key={q.id} className="flex flex-col gap-2">
                 <Label htmlFor="nameEval">{q.numberQuestion}. {q.text}</Label>
-              
+
                 {/* <Input
                   id={`question-${idx}`}
                   value={q.text}
@@ -461,11 +651,9 @@ const Evaluations = () => {
                       <h3 className="font-semibold text-lg text-foreground mb-1">
                         {evaluation.nameEval}
                       </h3>
-                      <p className="text-sm text-muted-foreground mb-2">
-                        {evaluation.codeEval}
-                      </p>
+
                       <Badge variant="outline" className="text-xs">
-                        {evaluation.form}
+                        {evaluation.codeEval}
                       </Badge>
                     </div>
                   </div>
@@ -509,7 +697,7 @@ const Evaluations = () => {
                             </DialogTitle>
                           </DialogHeader>
                           <div className="flex-1 overflow-y-auto p-4">
-                            
+
                             {selectedEvaluation && (
                               <EvaluationEditForm
                                 evaluation={selectedEvaluation}
@@ -534,50 +722,41 @@ const Evaluations = () => {
 
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <Badge variant={getStatusColor(evaluation.codeEval)}>
-                      {evaluation.status === 'active' && 'Activa'}
-                      {evaluation.status === 'draft' && 'Borrador'}
-                      {evaluation.codeEval === 'APOYO_SOCIAL' && 'Apoyo'}
-                    </Badge>
+
                     <Badge variant={getSeverityColor(evaluation.severity)}>
                       Severidad {evaluation.severity === 'low' ? 'Baja' : evaluation.severity === 'medium' ? 'Media' : 'Alta'}
                     </Badge>
                   </div>
 
-                  <div className="grid grid-cols-3 gap-4 text-sm">
+                  <div className="grid grid-cols-2 gap-4 text-sm">
                     <div className="text-center">
                       <p className="text-lg font-bold text-therapeutic">{evaluation.questions.length}</p>
                       <p className="text-muted-foreground">Preguntas</p>
                     </div>
-                    <div className="text-center">
-                      <p className="text-lg font-bold text-care">{evaluation.codeEval}</p>
-                      <p className="text-muted-foreground">Completadas</p>
-                    </div>
+
                     <div className="text-center">
                       <p className="text-lg font-bold text-wellness">{evaluation.scoreMax}</p>
                       <p className="text-muted-foreground">Max Puntuación</p>
                     </div>
                   </div>
 
-                  {/* <div className="space-y-2">
+                  <div className="space-y-2">
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Tasa de finalización</span>
-                      <span className="font-medium">{evaluation.codeEval}%</span>
+                      <span className="text-muted-foreground"></span>
+                      <span className="font-medium"></span>
                     </div>
                     <Progress value={evaluation.completionRate} className="h-2" />
-                  </div> */}
-
-                  <div className="flex items-center justify-between text-sm text-muted-foreground pt-2 border-t border-border">
-                    {evaluation.interpretation.map((interp: any, idx: number) => (
-                      <li key={idx}>
-                        <br />
-                        <Badge variant={getStatusColor(interp.rango)} className="mr-2">{interp.nivel}</Badge>
-                        <span>Rango: {interp.rango}</span>
-                      </li>
-                    ))}
                   </div>
+                  <Button
+                    size="sm"
+                    className="w-full bg-gradient-serenity text-white"
+                    onClick={() => setSelectedEvaluation(evaluation)}
+                  >
+                    Realizar Evaluación
+                  </Button>
                 </div>
               </CardContent>
+              
             </Card>
           );
         })}
