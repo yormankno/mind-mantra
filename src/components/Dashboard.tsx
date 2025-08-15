@@ -191,42 +191,7 @@ const Dashboard = ({ onSectionChange }: DashboardProps) => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Activity */}
-        <Card className="lg:col-span-2 shadow-card">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Activity className="h-5 w-5 text-primary" />
-              Actividad Reciente
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {recentActivity.map((activity, index) => {
-                const Icon = getActivityIcon(activity.type);
-                return (
-                  <div key={index} className="flex items-start gap-4 p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-gentle">
-                    <div className={`p-2 rounded-lg bg-gradient-serenity`}>
-                      <Icon className="h-4 w-4 text-white" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-foreground">
-                        {activity.title}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {activity.user} • {activity.time}
-                      </p>
-                    </div>
-                    <Badge variant={getStatusColor(activity.status, activity.severity)}>
-                      {activity.status === 'completed' && 'Completado'}
-                      {activity.status === 'sent' && 'Enviado'}
-                      {activity.status === 'active' && 'Activo'}
-                      {activity.status === 'alert' && 'Alerta'}
-                    </Badge>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
+        
 
         {/* Quick Actions */}
         <Card className="shadow-card">

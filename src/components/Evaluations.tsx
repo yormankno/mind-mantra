@@ -38,6 +38,7 @@ const Evaluations = () => {
   const [isViewOpen, setIsViewOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [evaluations, setEvaluations] = useState<any[]>([]);
+  
 
   useEffect(() => {
     fetch("http://localhost:3000/evaluations/base/all")
@@ -419,11 +420,7 @@ ${evalResult.questions.map((q: any, idx: number) => (
 
           <!-- CTA / Footer -->
           <table role="presentation" width="100%" class="mt-16">
-            <tr>
-              <td align="center" style="padding:8px 0 16px;">
-                <a href="#" style="display:inline-block; background:#2563eb; color:#ffffff; padding:12px 18px; border-radius:10px; font-weight:600;">Ver en plataforma</a>
-              </td>
-            </tr>
+            
             <tr>
               <td align="center" style="font-size:12px; color:#94a3b8; padding-bottom:40px;">
                 © 2025 MenteSana • Este email fue enviado automáticamente, por favor no responder a este mensaje.
@@ -544,10 +541,10 @@ ${evalResult.questions.map((q: any, idx: number) => (
         </div>
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-gradient-serenity text-white shadow-soft hover:shadow-glow transition-gentle">
+            {/* <Button className="bg-gradient-serenity text-white shadow-soft hover:shadow-glow transition-gentle">
               <Plus className="h-4 w-4 mr-2" />
               Nueva Evaluación
-            </Button>
+            </Button> */}
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
@@ -750,7 +747,7 @@ ${evalResult.questions.map((q: any, idx: number) => (
                   <Button
                     size="sm"
                     className="w-full bg-gradient-serenity text-white"
-                    onClick={() => setSelectedEvaluation(evaluation)}
+                    onClick={() => {setSelectedEvaluation(evaluation); setIsEditOpen(true)}}
                   >
                     Realizar Evaluación
                   </Button>

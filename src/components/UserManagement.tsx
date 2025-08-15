@@ -5,8 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { 
   Plus, 
   Search, 
@@ -14,9 +12,7 @@ import {
   Trash2, 
   Users,
   Heart,
-  Calendar,
   MapPin,
-  Phone,
   Mail,
   AlertCircle,
   CheckCircle,
@@ -214,7 +210,7 @@ const UserManagement = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold text-foreground">{user.name}</h3>
-                      <p className="text-sm text-muted-foreground">{user.age} años</p>
+                      <p className="text-sm text-muted-foreground">{user.age}</p>
                     </div>
                   </div>
                   <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-gentle">
@@ -263,17 +259,14 @@ const UserManagement = () => {
                       {user.email}
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground">
-                      <Phone className="h-4 w-4" />
-                      {user.phone}
+                      <Heart className="h-4 w-4" />
+                      {user.gender}
                     </div>
                     <div className="flex items-center gap-2 text-muted-foreground">
                       <MapPin className="h-4 w-4" />
-                      {user.location}
+                      {user.role}
                     </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Heart className="h-4 w-4" />
-                      {user.diagnosis}
-                    </div>
+                    
                   </div>
 
                   <div className="pt-3 border-t border-border">
@@ -300,7 +293,6 @@ const UserManagement = () => {
           );
         })}
       </div>
-
       {filteredUsers.length === 0 && (
         <Card className="shadow-card">
           <CardContent className="p-12 text-center">

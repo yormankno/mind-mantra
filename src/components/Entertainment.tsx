@@ -8,11 +8,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
-import { 
-  Plus, 
+import {
+  Plus,
   Search,
-  Gamepad2, 
-  Edit, 
+  Gamepad2,
+  Edit,
   Trash2,
   Play,
   Pause,
@@ -179,8 +179,8 @@ const Entertainment = () => {
 
   const filteredActivities = activities.filter(activity => {
     const matchesSearch = activity.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         activity.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         activity.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+      activity.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      activity.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
     const matchesCategory = filterCategory === "all" || activity.category === filterCategory;
     return matchesSearch && matchesCategory;
   });
@@ -234,12 +234,12 @@ const Entertainment = () => {
         <Label htmlFor="title">Título de la actividad</Label>
         <Input id="title" defaultValue={activity?.title} placeholder="Ingresa el título" />
       </div>
-      
+
       <div className="space-y-2">
         <Label htmlFor="description">Descripción</Label>
-        <Textarea 
-          id="description" 
-          defaultValue={activity?.description} 
+        <Textarea
+          id="description"
+          defaultValue={activity?.description}
           placeholder="Describe la actividad y sus beneficios..."
           rows={3}
         />
@@ -315,9 +315,9 @@ const Entertainment = () => {
 
       <div className="space-y-2">
         <Label htmlFor="instructions">Instrucciones</Label>
-        <Textarea 
-          id="instructions" 
-          defaultValue={activity?.instructions} 
+        <Textarea
+          id="instructions"
+          defaultValue={activity?.instructions}
           placeholder="Proporciona instrucciones claras para la actividad..."
           rows={4}
         />
@@ -325,10 +325,10 @@ const Entertainment = () => {
 
       <div className="space-y-2">
         <Label htmlFor="benefits">Beneficios (separados por comas)</Label>
-        <Input 
-          id="benefits" 
-          defaultValue={activity?.benefits?.join(', ')} 
-          placeholder="Reduce ansiedad, Mejora concentración..." 
+        <Input
+          id="benefits"
+          defaultValue={activity?.benefits?.join(', ')}
+          placeholder="Reduce ansiedad, Mejora concentración..."
         />
       </div>
 
@@ -355,10 +355,10 @@ const Entertainment = () => {
         </div>
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-gradient-wellness text-white shadow-soft hover:shadow-glow transition-gentle">
+            {/* <Button className="bg-gradient-wellness text-white shadow-soft hover:shadow-glow transition-gentle">
               <Plus className="h-4 w-4 mr-2" />
               Nueva Actividad
-            </Button>
+            </Button> */}
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
@@ -498,8 +498,8 @@ const Entertainment = () => {
                     </Button>
                     <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
                       <DialogTrigger asChild>
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant="ghost"
                           onClick={() => setSelectedActivity(activity)}
                         >

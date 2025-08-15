@@ -1,16 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { 
-  Brain, 
-  Users, 
-  Bell, 
-  ClipboardList, 
-  Gamepad2, 
+import {
+  Brain,
+  Users,
+  Bell,
+  ClipboardList,
+  Gamepad2,
   Menu,
   Heart,
   Sun,
-  Moon
+  Moon,
+  LogOut
+
 } from "lucide-react";
 
 interface LayoutProps {
@@ -21,39 +23,58 @@ interface LayoutProps {
 
 const Layout = ({ children, currentSection, onSectionChange }: LayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const userLogined = JSON.parse(localStorage.getItem("loggedUser")) || null;
+
+  // useEffect(() => {
+  //   const usuarioJSON = localStorage.getItem("loggedUser");
+  //   console.log("Usuario logueado:",  JSON.parse(usuarioJSON).email);
+
+  // }, []);
 
   const menuItems = [
     {
       id: 'dashboard',
       label: 'Dashboard',
       icon: Brain,
-      color: 'primary'
+      color: 'primary',
+      rol: ['paciente', 'admin']
     },
     {
       id: 'users',
       label: 'Gestión de Usuarios',
       icon: Users,
-      color: 'secondary'
+      color: 'secondary',
+      rol: ['admin']
+
     },
     {
       id: 'notifications',
       label: 'Notificaciones de Cuidado',
       icon: Bell,
-      color: 'care'
+      rol: ['paciente', 'admin']
     },
     {
       id: 'evaluations',
       label: 'Evaluaciones',
       icon: ClipboardList,
-      color: 'therapeutic'
+      color: 'therapeutic',
+      rol: ['paciente', 'admin']
     },
     {
       id: 'entertainment',
       label: 'Entretenimiento Terapéutico',
       icon: Gamepad2,
-      color: 'wellness'
+      color: 'wellness',
+      rol: ['paciente', 'admin']
     }
   ];
+
+  const cerrarSesion = () => {
+    localStorage.removeItem("loggedUser");
+    onSectionChange("login");
+    location.reload();
+
+  }
 
   return (
     <div className="min-h-screen bg-background transition-gentle">
@@ -91,32 +112,33 @@ const Layout = ({ children, currentSection, onSectionChange }: LayoutProps) => {
 
           {/* Navigation */}
           <nav className="flex-1 p-4 space-y-2">
-            {menuItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = currentSection === item.id;
-              
-              return (
-                <Button
-                  key={item.id}
-                  variant={isActive ? "default" : "ghost"}
-                  className={cn(
-                    "w-full justify-start gap-3 transition-gentle",
-                    !sidebarOpen && "justify-center px-2",
-                    isActive && "bg-gradient-serenity text-white shadow-soft",
-                    !isActive && "text-sidebar-foreground hover:bg-sidebar-accent"
-                  )}
-                  onClick={() => onSectionChange(item.id)}
-                >
-                  <Icon className={cn(
-                    "h-5 w-5 transition-gentle",
-                    isActive && "animate-gentle-pulse"
-                  )} />
-                  {sidebarOpen && (
-                    <span className="font-medium">{item.label}</span>
-                  )}
-                </Button>
-              );
-            })}
+            {menuItems
+              .filter(item => userLogined && item.rol.includes(userLogined.role))
+              .map((item) => {
+                const Icon = item.icon;
+                const isActive = currentSection === item.id;
+                return (
+                  <Button
+                    key={item.id}
+                    variant={isActive ? "default" : "ghost"}
+                    className={cn(
+                      "w-full justify-start gap-3 transition-gentle",
+                      !sidebarOpen && "justify-center px-2",
+                      isActive && "bg-gradient-serenity text-white shadow-soft",
+                      !isActive && "text-sidebar-foreground hover:bg-sidebar-accent"
+                    )}
+                    onClick={() => onSectionChange(item.id)}
+                  >
+                    <Icon className={cn(
+                      "h-5 w-5 transition-gentle",
+                      isActive && "animate-gentle-pulse"
+                    )} />
+                    {sidebarOpen && (
+                      <span className="font-medium">{item.label}</span>
+                    )}
+                  </Button>
+                );
+              })}
           </nav>
 
           {/* Footer */}
@@ -130,8 +152,10 @@ const Layout = ({ children, currentSection, onSectionChange }: LayoutProps) => {
               </div>
               {sidebarOpen && (
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-sidebar-foreground">Usuario</p>
-                  <p className="text-xs text-sidebar-foreground/60">Terapeuta</p>
+                  <p className="text-sm font-medium text-sidebar-foreground">{userLogined.email}</p>
+                  <p className="text-xs text-sidebar-foreground/60">{userLogined.role}</p>
+                  <LogOut className="h-4 w-4 mt-2" onClick={() => cerrarSesion()} />
+
                 </div>
               )}
             </div>

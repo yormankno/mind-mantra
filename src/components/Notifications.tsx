@@ -33,6 +33,7 @@ const Notifications = () => {
   const [selectedNotification, setSelectedNotification] = useState<any>(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const userLogined = JSON.parse(localStorage.getItem("loggedUser")) || null;
 
   // Obtener notificaciones desde la API
   useEffect(() => {
@@ -124,10 +125,10 @@ const Notifications = () => {
             rows={4}
           />
         </div>
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <Label htmlFor="userId">ID de Usuario</Label>
           <Input id="userId" type="number" value={form.userId} onChange={handleChange} />
-        </div>
+        </div> */}
         <div className="flex justify-end gap-2 pt-4">
           <Button variant="outline" type="button" onClick={onClose}>
             Cancelar
@@ -152,10 +153,13 @@ const Notifications = () => {
         </div>
         <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-gradient-care text-white shadow-soft hover:shadow-glow transition-gentle">
+            {userLogined.role === 'paciente' ? null : (
+              <Button className="bg-gradient-care text-white shadow-soft hover:shadow-glow transition-gentle">
               <Plus className="h-4 w-4 mr-2" />
               Nueva Notificación
             </Button>
+            )}
+            
           </DialogTrigger>
           <DialogContent className="max-w-2xl">
             <DialogHeader>
