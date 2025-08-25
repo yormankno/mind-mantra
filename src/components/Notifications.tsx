@@ -28,6 +28,8 @@ import {
   Zap
 } from "lucide-react";
 
+const API_BACKEND = import.meta.env.VITE_API_URL
+
 const Notifications = () => {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [selectedNotification, setSelectedNotification] = useState<any>(null);
@@ -37,7 +39,7 @@ const Notifications = () => {
 
   // Obtener notificaciones desde la API
   useEffect(() => {
-    fetch("http://localhost:3000/notifications")
+    fetch(`${API_BACKEND}/notifications`)
       .then(res => res.json())
       .then(data => setNotifications(data.data || []))
       .catch(() => setNotifications([]));
@@ -76,7 +78,7 @@ const Notifications = () => {
   // Función para crear notificación
   const createNotification = async (notificationData: any) => {
     try {
-      const res = await fetch("http://localhost:3000/notifications", {
+      const res = await fetch(`${API_BACKEND}/notifications`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(notificationData),
@@ -183,7 +185,7 @@ const Notifications = () => {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Total Notificaciones</p>
-                <p className="text-2xl font-bold">156</p>
+                <p className="text-2xl font-bold">4</p>
               </div>
             </div>
           </CardContent>
@@ -197,7 +199,7 @@ const Notifications = () => {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Enviadas Hoy</p>
-                <p className="text-2xl font-bold">34</p>
+                <p className="text-2xl font-bold">3</p>
               </div>
             </div>
           </CardContent>
@@ -225,7 +227,7 @@ const Notifications = () => {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Usuarios Activos</p>
-                <p className="text-2xl font-bold">173</p>
+                <p className="text-2xl font-bold">3</p>
               </div>
             </div>
           </CardContent>

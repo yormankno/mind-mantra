@@ -13,7 +13,10 @@ interface LoginProps {
   onGoToReset?: () => void;
 }
 
+const API_BACKEND = import.meta.env.VITE_API_URL
+
 export default function Login({ onLogin, onGoToRegister, onGoToReset }: LoginProps) {
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -29,7 +32,7 @@ export default function Login({ onLogin, onGoToRegister, onGoToReset }: LoginPro
     try {
       // 👉 Aquí conectas tu lógica real (fetch/axios a tu API NestJS)
       // Simulación breve
-    const auth = await fetch("http://localhost:3000/users/login", {
+    const auth = await fetch(`${API_BACKEND}/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

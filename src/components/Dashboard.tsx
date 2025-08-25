@@ -22,7 +22,7 @@ const Dashboard = ({ onSectionChange }: DashboardProps) => {
   const stats = [
     {
       title: "Usuarios Activos",
-      value: "248",
+      value: "3",
       change: "+12.5%",
       icon: Users,
       color: "bg-gradient-serenity",
@@ -30,7 +30,7 @@ const Dashboard = ({ onSectionChange }: DashboardProps) => {
     },
     {
       title: "Evaluaciones Completadas",
-      value: "89",
+      value: "2",
       change: "+8.2%",
       icon: ClipboardList,
       color: "bg-gradient-wellness",
@@ -38,7 +38,7 @@ const Dashboard = ({ onSectionChange }: DashboardProps) => {
     },
     {
       title: "Notificaciones Enviadas",
-      value: "156",
+      value: "3",
       change: "+15.3%",
       icon: Bell,
       color: "bg-gradient-care",
@@ -46,7 +46,7 @@ const Dashboard = ({ onSectionChange }: DashboardProps) => {
     },
     {
       title: "Sesiones Terapéuticas",
-      value: "34",
+      value: "2",
       change: "+6.7%",
       icon: Gamepad2,
       color: "bg-gradient-wellness",

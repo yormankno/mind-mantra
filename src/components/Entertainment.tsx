@@ -382,7 +382,7 @@ const Entertainment = () => {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Actividades Activas</p>
-                <p className="text-2xl font-bold">18</p>
+                <p className="text-2xl font-bold">7</p>
               </div>
             </div>
           </CardContent>
@@ -396,7 +396,7 @@ const Entertainment = () => {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Participaciones</p>
-                <p className="text-2xl font-bold">756</p>
+                <p className="text-2xl font-bold">5</p>
               </div>
             </div>
           </CardContent>

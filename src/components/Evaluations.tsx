@@ -31,6 +31,8 @@ import {
 
 } from "lucide-react";
 
+const API_BACKEND = import.meta.env.VITE_API_URL
+
 const Evaluations = () => {
   const [selectedEvaluation, setSelectedEvaluation] = useState<any>(null);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -39,9 +41,8 @@ const Evaluations = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [evaluations, setEvaluations] = useState<any[]>([]);
   
-
   useEffect(() => {
-    fetch("http://localhost:3000/evaluations/base/all")
+    fetch(`${API_BACKEND}/evaluations/base/all`)
       .then(res => res.json())
       .then(data => {
         console.log("PREGUNTAS: ", data);
@@ -264,7 +265,7 @@ const Evaluations = () => {
       };
 
       try {
-        const res = await fetch("http://localhost:3000/evaluations", {
+        const res = await fetch(`${API_BACKEND}/evaluations`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
@@ -277,7 +278,7 @@ const Evaluations = () => {
             : "";
 
           // Enviar correo después de crear la evaluación
-          await fetch("http://localhost:3000/mail/send", {
+          await fetch(`${API_BACKEND}mail/send`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -568,7 +569,7 @@ ${evalResult.questions.map((q: any, idx: number) => (
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Evaluaciones Activas</p>
-                <p className="text-2xl font-bold">12</p>
+                <p className="text-2xl font-bold">4</p>
               </div>
             </div>
           </CardContent>
@@ -582,7 +583,7 @@ ${evalResult.questions.map((q: any, idx: number) => (
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Completadas Hoy</p>
-                <p className="text-2xl font-bold">23</p>
+                <p className="text-2xl font-bold">2</p>
               </div>
             </div>
           </CardContent>
@@ -610,7 +611,7 @@ ${evalResult.questions.map((q: any, idx: number) => (
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Tiempo Promedio</p>
-                <p className="text-2xl font-bold">6.2m</p>
+                <p className="text-2xl font-bold">1.2m</p>
               </div>
             </div>
           </CardContent>

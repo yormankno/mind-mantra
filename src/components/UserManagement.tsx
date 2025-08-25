@@ -19,6 +19,8 @@ import {
   Clock
 } from "lucide-react";
 
+const API_BACKEND = import.meta.env.VITE_API_URL
+
 const UserManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState<any>(null);
@@ -28,7 +30,7 @@ const UserManagement = () => {
 
   // Nuevo: obtener usuarios desde la API
   useEffect(() => {
-    fetch("http://localhost:3000/users")
+    fetch(`${API_BACKEND}/users`)
       .then(res => res.json())
       .then(data => {
         
@@ -72,7 +74,7 @@ const UserManagement = () => {
   // Nueva función para crear usuario
   const createUser = async (userData: any) => {
     try {
-      const res = await fetch("http://localhost:3000/users", {
+      const res = await fetch(`${API_BACKEND}/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(userData),
